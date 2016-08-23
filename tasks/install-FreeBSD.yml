@@ -1,0 +1,6 @@
+---
+
+- name: Install rabbitmq
+  pkgng:
+    name: rabbitmq
+    state: present

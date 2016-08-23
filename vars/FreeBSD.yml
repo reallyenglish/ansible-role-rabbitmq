@@ -1,0 +1,2 @@
+__rabbitmq_db_dir: /var/db/rabbitmq
+__rabbitmq_conf: /usr/local/etc/rabbitmq.conf
