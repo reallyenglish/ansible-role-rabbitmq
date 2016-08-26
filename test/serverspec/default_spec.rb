@@ -6,13 +6,13 @@ service = 'rabbitmq'
 config  = '/etc/rabbitmq/rabbitmq.conf'
 user    = 'rabbitmq'
 group   = 'rabbitmq'
-ports   = [ PORTS ]
+ports   = [ 5673 ]
 log_dir = '/var/log/rabbitmq'
 db_dir  = '/var/lib/rabbitmq'
 
 case os[:family]
 when 'freebsd'
-  config = '/usr/local/etc/rabbitmq.conf'
+  config = '/usr/local/etc/rabbitmq/rabbitmq.config'
   db_dir = '/var/db/rabbitmq'
 end
 
@@ -22,7 +22,7 @@ end
 
 describe file(config) do
   it { should be_file }
-  its(:content) { should match Regexp.escape('rabbitmq') }
+  its(:content) { should match Regexp.escape('{rabbit') }
 end
 
 describe file(log_dir) do

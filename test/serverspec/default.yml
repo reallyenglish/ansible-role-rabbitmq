@@ -2,4 +2,4 @@
   roles:
     - ansible-role-rabbitmq
   vars:
-    rabbitmq_config: ""
+    rabbitmq_cookie: "ABCDEFGHIJK"

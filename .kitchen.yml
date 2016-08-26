@@ -31,7 +31,7 @@ suites:
   - name: default
     provisioner:
       name: ansible_playbook
-      playbook: test/integration/default.yml
+      playbook: test/serverspec/default.yml
     verifier:
       name: shell
-      command: rspec -c -f d -I spec/serverspec spec/serverspec/default_spec.rb
+      command: rspec -c -f d -I test/serverspec test/serverspec/default_spec.rb
