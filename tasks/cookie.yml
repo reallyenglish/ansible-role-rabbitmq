@@ -1,0 +1,41 @@
+- stat:
+    checksum_algorithm: sha1
+    path: "{{ rabbitmq_cookie_file }}"
+  register: cookie
+
+- set_fact:
+    cookie_sha1: "{{ rabbitmq_cookie | hash('sha1') }}"
+
+- set_fact:
+    existsing_cookie_sha1: "{{ cookie.stat.checksum }}"
+
+# XXX there is no way to replace cookie while a cluster of rabbitmq is running
+- debug:
+    msg: "stopping rabbitmq before updating cookie"
+  notify: Stop rabbitmq
+  when: "{{ cookie.stat.exists and cookie.stat.checksum != cookie_sha1 }}"
+
+- meta: flush_handlers
+  when: "{{ cookie.stat.exists and cookie.stat.checksum != cookie_sha1 }}"
+
+- name: Update erlang cookie
+  template:
+    src: erlang.cookie.j2
+    dest: "{{ rabbitmq_cookie_file }}"
+    mode: 0640
+    owner: "{{ rabbitmq_user }}"
+    group: "{{ rabbitmq_group }}"
+  notify: Start erlang
+  when: "{{ cookie.stat.exists and cookie.stat.checksum != cookie_sha1 }}"
+
+# - name: Wipe the database
+#   when: "{{ cookie.stat.exists and cookie.stat.checksum != cookie_sha1 }}"
+
+- name: Create erlang cookie
+  template:
+    src: erlang.cookie.j2
+    dest: "{{ rabbitmq_cookie_file }}"
+    mode: 0640
+    owner: "{{ rabbitmq_user }}"
+    group: "{{ rabbitmq_group }}"
+  when: "{{ not cookie.stat.exists }}"

@@ -13,7 +13,6 @@
     owner: "{{ rabbitmq_user }}"
     group: "{{ rabbitmq_group }}"
     state: directory
-  notify: Restart rabbitmq
 
 - name: Create db directory
   file:
@@ -22,11 +21,20 @@
     owner: "{{ rabbitmq_user }}"
     group: "{{ rabbitmq_group }}"
     state: directory
-  notify: Restart rabbitmq
+
+- include: cookie.yml
+
+- name: Create rabbitmq config dir
+  file:
+    state: directory
+    path: "{{ rabbitmq_conf | dirname }}"
+    mode: 0755
+    owner: "{{ rabbitmq_user }}"
+    group: "{{ rabbitmq_group }}"
 
 - name: Create rabbitmq.conf
   template:
-    src: rabbitmq.conf.j2
+    src: rabbitmq.config.j2
     dest: "{{ rabbitmq_conf }}"
   notify: Restart rabbitmq
 
@@ -35,3 +43,9 @@
     name: "{{ rabbitmq_service }}"
     enabled: true
     state: started
+
+- name: Create vhosts
+  rabbitmq_vhost:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ rabbitmq_vhosts }}"
