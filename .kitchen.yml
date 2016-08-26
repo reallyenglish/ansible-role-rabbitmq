@@ -15,11 +15,12 @@ provisioner:
     - extra_modules
     - filter_plugins
   ansible_vault_password_file: <%= File.expand_path(ENV['ANSIBLE_VAULT_PASSWORD_FILE']) %>
-  extra_vars:
-    ansible_python_interpreter: '/usr/local/bin/python'
 
 platforms:
   - name: ansible-freebsd-10.3-amd64
+    provisioner:
+      extra_vars:
+        ansible_python_interpreter: '/usr/local/bin/python'
     driver:
       box: trombik/ansible-freebsd-10.3-amd64
       box_check_update: false
