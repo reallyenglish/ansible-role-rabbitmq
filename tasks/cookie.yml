@@ -12,11 +12,14 @@
 - set_fact:
     cookie_needs_to_be_updated: "{{ existsing_cookie_sha1 and cookie.stat.exists and existsing_cookie_sha1 != cookie_sha1 }}"
 
-# XXX there is no way to replace cookie while a cluster of rabbitmq is running
 - debug:
     msg: "stopping rabbitmq before updating cookie"
   notify: Stop rabbitmq
   when: "{{ cookie_needs_to_be_updated }}"
+
+# TODO there is no way to replace cookie without destroying database while a cluster of rabbitmq is running
+# - name: Wipe the database
+#   when: "{{ cookie_needs_to_be_updated }}"
 
 - meta: flush_handlers
   when: "{{ cookie_needs_to_be_updated }}"
@@ -30,9 +33,6 @@
     group: "{{ rabbitmq_group }}"
   notify: Start erlang
   when: "{{ cookie_needs_to_be_updated }}"
-
-# - name: Wipe the database
-#   when: "{{ cookie_needs_to_be_updated }}"
 
 - name: Create erlang cookie
   template:
