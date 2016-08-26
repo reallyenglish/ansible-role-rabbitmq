@@ -4,3 +4,8 @@
   pkgng:
     name: rabbitmq
     state: present
+
+- name: Create rc.conf fragment
+  template:
+    src: rc.conf-FreeBSD.j2
+    dest: /etc/rc.conf.d/rabbitmq
