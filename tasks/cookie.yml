@@ -7,16 +7,19 @@
     cookie_sha1: "{{ rabbitmq_cookie | hash('sha1') }}"
 
 - set_fact:
-    existsing_cookie_sha1: "{{ cookie.stat.checksum }}"
+    existsing_cookie_sha1: "{% if 'checksum' in cookie.stat %}{{ cookie.stat.checksum }}{% endif %}"
+
+- set_fact:
+    cookie_needs_to_be_updated: "{{ existsing_cookie_sha1 and cookie.stat.exists and existsing_cookie_sha1 != cookie_sha1 }}"
 
 # XXX there is no way to replace cookie while a cluster of rabbitmq is running
 - debug:
     msg: "stopping rabbitmq before updating cookie"
   notify: Stop rabbitmq
-  when: "{{ cookie.stat.exists and cookie.stat.checksum != cookie_sha1 }}"
+  when: "{{ cookie_needs_to_be_updated }}"
 
 - meta: flush_handlers
-  when: "{{ cookie.stat.exists and cookie.stat.checksum != cookie_sha1 }}"
+  when: "{{ cookie_needs_to_be_updated }}"
 
 - name: Update erlang cookie
   template:
@@ -26,10 +29,10 @@
     owner: "{{ rabbitmq_user }}"
     group: "{{ rabbitmq_group }}"
   notify: Start erlang
-  when: "{{ cookie.stat.exists and cookie.stat.checksum != cookie_sha1 }}"
+  when: "{{ cookie_needs_to_be_updated }}"
 
 # - name: Wipe the database
-#   when: "{{ cookie.stat.exists and cookie.stat.checksum != cookie_sha1 }}"
+#   when: "{{ cookie_needs_to_be_updated }}"
 
 - name: Create erlang cookie
   template:
