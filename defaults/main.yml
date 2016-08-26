@@ -8,6 +8,7 @@ rabbitmq_flags: ""
 
 rabbitmq_cookie_file: "{{ __rabbitmq_db_dir }}/.erlang.cookie"
 rabbitmq_cookie: ""
+rabbitmq_ulimit: 4096
 
 rabbitmq_users: []
 rabbitmq_vhosts: []

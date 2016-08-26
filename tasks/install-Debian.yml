@@ -1,5 +1,20 @@
 ---
 
+- name: Capture fs.file-max
+  shell: sysctl -n fs.file-max
+  register: fs_file_max
+  changed_when: false
+
+- assert:
+    that:
+      - "{{ ( fs_file_max.stdout | int ) > rabbitmq_ulimit }}"
+
+- name: Configure ulimit before rabbitmq starts
+  template:
+    src: default-rabbitmq-server.j2
+    dest: "/etc/default/{{ rabbitmq_service }}"
+  notify: Restart rabbitmq
+
 - name: Install rabbitmq
   apt:
     name: rabbitmq-server
