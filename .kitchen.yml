@@ -27,6 +27,9 @@ platforms:
     driver_config:
       ssh:
         shell: '/bin/sh'
+  - name: opscode-ubuntu-14.04
+    driver:
+      box: opscode-ubuntu-14.04
 
 suites:
   - name: default
