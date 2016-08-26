@@ -5,3 +5,9 @@ rabbitmq_db_dir: "{{ __rabbitmq_db_dir }}"
 rabbitmq_service: rabbitmq
 rabbitmq_conf: "{{ __rabbitmq_conf }}"
 rabbitmq_flags: ""
+
+rabbitmq_cookie_file: "{{ __rabbitmq_db_dir }}/.erlang.cookie"
+rabbitmq_cookie: ""
+
+rabbitmq_users: []
+rabbitmq_vhosts: []
