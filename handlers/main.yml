@@ -1,6 +1,11 @@
 ---
 
-- name: Restart rabbitmq_config
+- name: Restart rabbitmq
   service:
     name: rabbitmq
     state: restarted
+
+- name: Stop rabbitmq
+  service:
+    name: rabbitmq
+    state: stopped
