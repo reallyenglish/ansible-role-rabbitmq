@@ -6,7 +6,7 @@ service = 'rabbitmq'
 config  = '/etc/rabbitmq/rabbitmq.conf'
 user    = 'rabbitmq'
 group   = 'rabbitmq'
-ports   = [ 5673 ]
+ports   = [ 5673, 4369, 25672 ] # AMQP transport, Erlang Port Mapper (epmd), rabbitmq node port
 log_dir = '/var/log/rabbitmq'
 db_dir  = '/var/lib/rabbitmq'
 
