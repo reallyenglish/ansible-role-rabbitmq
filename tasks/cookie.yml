@@ -32,7 +32,7 @@
     mode: 0400
     owner: "{{ rabbitmq_user }}"
     group: "{{ rabbitmq_group }}"
-  notify: Start erlang
+  notify: Restart rabbitmq
   when: "{{ cookie_needs_to_be_updated }}"
 
 - name: Create erlang cookie
