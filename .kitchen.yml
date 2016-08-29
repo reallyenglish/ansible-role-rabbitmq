@@ -2,6 +2,9 @@
 driver:
   name: vagrant
 
+transport:
+    name: rsync
+
 provisioner:
   hosts: test-kitchen
   name: ansible_playbook
