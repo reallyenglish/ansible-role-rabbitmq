@@ -1,3 +1,3 @@
 __rabbitmq_service: rabbitmq-server
 __rabbitmq_db_dir: /var/lib/rabbitmq
-__rabbitmq_conf: /etc/rabbitmq/rabbitmq.config
+__rabbitmq_conf_dir: /etc/rabbitmq

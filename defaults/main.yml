@@ -3,7 +3,8 @@ rabbitmq_group: rabbitmq
 rabbitmq_log_dir: /var/log/rabbitmq
 rabbitmq_db_dir: "{{ __rabbitmq_db_dir }}"
 rabbitmq_service: "{{ __rabbitmq_service }}"
-rabbitmq_conf: "{{ __rabbitmq_conf }}"
+rabbitmq_conf_dir: "{{ __rabbitmq_conf_dir }}"
+rabbitmq_conf: "{{ rabbitmq_conf_dir }}/rabbitmq.config"
 rabbitmq_flags: ""
 
 rabbitmq_cookie_file: "{{ __rabbitmq_db_dir }}/.erlang.cookie"
