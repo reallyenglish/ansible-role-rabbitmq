@@ -50,6 +50,10 @@
     enabled: true
     state: started
 
+- name: Enable plugins
+  rabbitmq_plugin:
+    names: "{{ rabbitmq_plugins | join(',') }}"
+
 - name: Create vhosts
   rabbitmq_vhost:
     name: "{{ item }}"
