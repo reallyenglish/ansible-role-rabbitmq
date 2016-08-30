@@ -3,7 +3,7 @@ driver:
   name: vagrant
 
 transport:
-    name: rsync
+  name: rsync
 
 provisioner:
   hosts: test-kitchen
