@@ -28,6 +28,10 @@ end
 describe file(config) do
   it { should be_file }
   its(:content) { should match Regexp.escape('{rabbit') }
+  its(:content) { should match Regexp.escape('{log_levels, [{connection, info}]},') }
+  its(:content) { should match Regexp.escape('{vm_memory_high_watermark, 0.4},') }
+  its(:content) { should match Regexp.escape('{vm_memory_high_watermark_paging_ratio, 0.5},') }
+  its(:content) { should match Regexp.escape('{disk_free_limit, "50MB"}') }
 end
 
 describe file(env_config) do
