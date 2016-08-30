@@ -30,9 +30,9 @@ platforms:
     driver_config:
       ssh:
         shell: '/bin/sh'
-  - name: opscode-ubuntu-14.04
+  - name: ansible-ubuntu-14.04-amd64
     driver:
-      box: opscode-ubuntu-14.04
+      box: trombik/ansible-ubuntu-14.04-amd64
 
 suites:
   - name: default
