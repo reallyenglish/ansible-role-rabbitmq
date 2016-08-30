@@ -4,9 +4,10 @@ require 'serverspec'
 package = 'rabbitmq'
 service = 'rabbitmq'
 config  = '/etc/rabbitmq/rabbitmq.config'
+env_config  = '/etc/rabbitmq/rabbitmq-env.conf'
 user    = 'rabbitmq'
 group   = 'rabbitmq'
-ports   = [ 5673, 4369, 25672 ] # AMQP transport, Erlang Port Mapper (epmd), rabbitmq node port
+ports   = [ 5672, 4369, 25672 ] # AMQP transport, Erlang Port Mapper (epmd), rabbitmq node port
 log_dir = '/var/log/rabbitmq'
 db_dir  = '/var/lib/rabbitmq'
 
@@ -17,6 +18,7 @@ when 'debian', 'ubuntu'
 when 'freebsd'
   config = '/usr/local/etc/rabbitmq/rabbitmq.config'
   db_dir = '/var/db/rabbitmq'
+  env_config  = '/usr/local/etc/rabbitmq/rabbitmq-env.conf'
 end
 
 describe package(package) do
@@ -26,6 +28,13 @@ end
 describe file(config) do
   it { should be_file }
   its(:content) { should match Regexp.escape('{rabbit') }
+end
+
+describe file(env_config) do
+  it { should be_file }
+  its(:content) { should match /^FOO="1"$/ }
+  its(:content) { should match /^BAR="2"$/ }
+  its(:content) { should match /^USE_LONGNAME="1"$/ }
 end
 
 describe file(log_dir) do

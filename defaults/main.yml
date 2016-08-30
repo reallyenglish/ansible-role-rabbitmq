@@ -7,6 +7,9 @@ rabbitmq_conf_dir: "{{ __rabbitmq_conf_dir }}"
 rabbitmq_conf: "{{ rabbitmq_conf_dir }}/rabbitmq.config"
 rabbitmq_flags: ""
 
+rabbitmq_env_conf: "{{ rabbitmq_conf_dir }}/rabbitmq-env.conf"
+rabbitmq_env: {}
+
 rabbitmq_cookie_file: "{{ __rabbitmq_db_dir }}/.erlang.cookie"
 rabbitmq_cookie: ""
 rabbitmq_ulimit: 4096

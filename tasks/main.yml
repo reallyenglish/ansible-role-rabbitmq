@@ -37,6 +37,13 @@
     dest: "{{ rabbitmq_conf }}"
   notify: Restart rabbitmq
 
+- name: Create rabbitmq-env.conf
+  template:
+    src: rabbitmq-env.conf.j2
+    dest: "{{ rabbitmq_env_conf }}"
+    validate: sh %s
+  notify: Restart rabbitmq
+
 - name: Start rabbitmq
   service:
     name: "{{ rabbitmq_service }}"

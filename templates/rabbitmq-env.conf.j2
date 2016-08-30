@@ -1,0 +1,3 @@
+{% for k, v in rabbitmq_env.iteritems() %}
+{{ k | upper() }}="{{ v }}"
+{% endfor %}

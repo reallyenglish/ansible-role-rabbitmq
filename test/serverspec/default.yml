@@ -3,3 +3,7 @@
     - ansible-role-rabbitmq
   vars:
     rabbitmq_cookie: "ABCDEFGHIJK"
+    rabbitmq_env:
+      foo: 1
+      BAR: 2
+      USE_LONGNAME: 1
