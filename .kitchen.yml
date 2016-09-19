@@ -2,6 +2,9 @@
 driver:
   name: vagrant
 
+transport:
+  name: rsync
+
 provisioner:
   hosts: test-kitchen
   name: ansible_playbook
@@ -15,17 +18,21 @@ provisioner:
     - extra_modules
     - filter_plugins
   ansible_vault_password_file: <%= File.expand_path(ENV['ANSIBLE_VAULT_PASSWORD_FILE'] || '') %>
-  extra_vars:
-    ansible_python_interpreter: '/usr/local/bin/python'
 
 platforms:
   - name: ansible-freebsd-10.3-amd64
+    provisioner:
+      extra_vars:
+        ansible_python_interpreter: '/usr/local/bin/python'
     driver:
       box: trombik/ansible-freebsd-10.3-amd64
       box_check_update: false
     driver_config:
       ssh:
         shell: '/bin/sh'
+  - name: ansible-ubuntu-14.04-amd64
+    driver:
+      box: trombik/ansible-ubuntu-14.04-amd64
 
 suites:
   - name: default

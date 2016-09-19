@@ -1,3 +1,11 @@
 [
-  {rabbit, [{tcp_listeners, [5673]}]}
+  {rabbit,
+   [
+    {tcp_listeners, {{ rabbitmq_conf_tcp_listeners }}},
+    {log_levels, [{connection, {{ rabbitmq_conf_log_levels }}}]},
+    {vm_memory_high_watermark, {{ rabbitmq_conf_high_watermark }}},
+    {vm_memory_high_watermark_paging_ratio, {{ rabbitmq_conf_high_watermark_paging_ratio }}},
+    {disk_free_limit, "{{ rabbitmq_conf_disk_free_limit }}"}
+   ]
+  }
 ].

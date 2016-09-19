@@ -2,10 +2,5 @@
 
 - name: Restart rabbitmq
   service:
-    name: rabbitmq
+    name: "{{ rabbitmq_service }}"
     state: restarted
-
-- name: Stop rabbitmq
-  service:
-    name: rabbitmq
-    state: stopped

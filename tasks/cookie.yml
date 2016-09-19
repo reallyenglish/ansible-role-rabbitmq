@@ -7,35 +7,48 @@
     cookie_sha1: "{{ rabbitmq_cookie | hash('sha1') }}"
 
 - set_fact:
-    existsing_cookie_sha1: "{{ cookie.stat.checksum }}"
+    existsing_cookie_sha1: "{% if 'checksum' in cookie.stat %}{{ cookie.stat.checksum }}{% endif %}"
 
-# XXX there is no way to replace cookie while a cluster of rabbitmq is running
-- debug:
-    msg: "stopping rabbitmq before updating cookie"
-  notify: Stop rabbitmq
-  when: "{{ cookie.stat.exists and cookie.stat.checksum != cookie_sha1 }}"
+- set_fact:
+    cookie_needs_to_be_updated: "{{ existsing_cookie_sha1 and cookie.stat.exists and existsing_cookie_sha1 != cookie_sha1 }}"
 
-- meta: flush_handlers
-  when: "{{ cookie.stat.exists and cookie.stat.checksum != cookie_sha1 }}"
+- name: "Stop rabbitmq before updating cookie"
+  # stop it immediately, rather than "notify" and call "flush_handlers" because
+  # a) it might flush other handers in queue and b) the service must be stopped
+  # here in any case when cookie_needs_to_be_updated is treu
+  service:
+    name: "{{ rabbitmq_service }}"
+    state: stopped
+  when: "{{ cookie_needs_to_be_updated }}"
+
+# TODO there is no way to replace cookie without destroying database while a cluster of rabbitmq is running
+# - name: Wipe the database
+#   when: "{{ cookie_needs_to_be_updated }}"
 
 - name: Update erlang cookie
   template:
     src: erlang.cookie.j2
     dest: "{{ rabbitmq_cookie_file }}"
-    mode: 0640
+    mode: 0400
     owner: "{{ rabbitmq_user }}"
     group: "{{ rabbitmq_group }}"
-  notify: Start erlang
-  when: "{{ cookie.stat.exists and cookie.stat.checksum != cookie_sha1 }}"
-
-# - name: Wipe the database
-#   when: "{{ cookie.stat.exists and cookie.stat.checksum != cookie_sha1 }}"
+  notify: Restart rabbitmq
+  when: "{{ cookie_needs_to_be_updated }}"
 
 - name: Create erlang cookie
   template:
     src: erlang.cookie.j2
     dest: "{{ rabbitmq_cookie_file }}"
-    mode: 0640
+    mode: 0400
     owner: "{{ rabbitmq_user }}"
     group: "{{ rabbitmq_group }}"
   when: "{{ not cookie.stat.exists }}"
+
+- name: Fix permission
+  # when the permission has been modified somehow after first ansible play,
+  # "Create erlang cookie" task is never called
+  file:
+    path: "{{ rabbitmq_cookie_file }}"
+    mode: 0400
+    owner: "{{ rabbitmq_user }}"
+    group: "{{ rabbitmq_group }}"
