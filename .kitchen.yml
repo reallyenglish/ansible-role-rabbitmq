@@ -14,7 +14,7 @@ provisioner:
   additional_copy_path:
     - extra_modules
     - filter_plugins
-  ansible_vault_password_file: <%= File.expand_path(ENV['ANSIBLE_VAULT_PASSWORD_FILE']) %>
+  ansible_vault_password_file: <%= File.expand_path(ENV['ANSIBLE_VAULT_PASSWORD_FILE'] || '') %>
   extra_vars:
     ansible_python_interpreter: '/usr/local/bin/python'
 
