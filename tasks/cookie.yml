@@ -1,3 +1,4 @@
+---
 - name: Get stat of rabbitmq_cookie_file
   stat:
     checksum_algorithm: sha1
@@ -11,12 +12,12 @@
     rabbitmq_existsing_cookie_sha1: "{% if 'checksum' in register_rabbitmq_cookie.stat %}{{ register_rabbitmq_cookie.stat.checksum }}{% endif %}"
 
 - set_fact:
-    rabbitmq_rabbitmq_cookie_needs_to_be_updated: "{{ rabbitmq_existsing_cookie_sha1 and register_rabbitmq_cookie.stat.exists and rabbitmq_existsing_cookie_sha1 != rabbitmq_cookie_sha1 }}"
+    rabbitmq_cookie_needs_to_be_updated: "{{ rabbitmq_existsing_cookie_sha1 and register_rabbitmq_cookie.stat.exists and rabbitmq_existsing_cookie_sha1 != rabbitmq_cookie_sha1 }}"
 
 - name: "Stop rabbitmq before updating cookie"
   # stop it immediately, rather than "notify" and call "flush_handlers" because
   # a) it might flush other handers in queue and b) the service must be stopped
-  # here in any case when rabbitmq_cookie_needs_to_be_updated is treu
+  # here in any case when rabbitmq_cookie_needs_to_be_updated is true
   service:
     name: "{{ rabbitmq_service }}"
     state: stopped
@@ -31,7 +32,7 @@
   template:
     src: erlang.cookie.j2
     dest: "{{ rabbitmq_cookie_file }}"
-    mode: 0400
+    mode: 0600
     owner: "{{ rabbitmq_user }}"
     group: "{{ rabbitmq_group }}"
   notify: Restart rabbitmq
@@ -47,12 +48,3 @@
     group: "{{ rabbitmq_group }}"
   when:
     - not register_rabbitmq_cookie.stat.exists
-
-- name: Fix permission
-  # when the permission has been modified somehow after first ansible play,
-  # "Create erlang cookie" task is never called
-  file:
-    path: "{{ rabbitmq_cookie_file }}"
-    mode: 0400
-    owner: "{{ rabbitmq_user }}"
-    group: "{{ rabbitmq_group }}"
