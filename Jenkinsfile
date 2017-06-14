@@ -1,4 +1,5 @@
 node ('virtualbox') {
+
   def directory = "ansible-role-rabbitmq"
   env.ANSIBLE_VAULT_PASSWORD_FILE = "~/.ansible_vault_key"
   stage 'Clean up'
@@ -7,7 +8,14 @@ node ('virtualbox') {
   stage 'Checkout'
   sh "mkdir $directory"
   dir("$directory") {
-    checkout scm
+    try {
+        checkout scm
+        sh "git submodule update --init"
+    } catch (e) {
+        currentBuild.result = 'FAILURE'
+        notifyBuild(currentBuild.result)
+        throw e
+    }
   }
   dir("$directory") {
     stage 'bundle'

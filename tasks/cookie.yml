@@ -1,4 +1,5 @@
-- stat:
+- name: Get stat of rabbitmq_cookie_file
+  stat:
     checksum_algorithm: sha1
     path: "{{ rabbitmq_cookie_file }}"
   register: cookie
