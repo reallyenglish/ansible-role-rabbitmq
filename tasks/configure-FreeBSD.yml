@@ -4,4 +4,5 @@
   template:
     src: rc.conf-FreeBSD.j2
     dest: /etc/rc.conf.d/rabbitmq
+    validate: sh -n %s
 
