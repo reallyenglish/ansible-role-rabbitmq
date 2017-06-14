@@ -47,8 +47,8 @@
     src: rabbitmq-env.conf.j2
     dest: "{{ rabbitmq_env_conf }}"
     validate: sh -n %s
-    owner: rabbitmq_user
-    group: rabbitmq_group
+    owner: "{{ rabbitmq_user }}"
+    group: "{{ rabbitmq_group }}"
   notify: Restart rabbitmq
 
 - name: Start rabbitmq
