@@ -11,21 +11,21 @@
     rabbitmq_existsing_cookie_sha1: "{% if 'checksum' in register_rabbitmq_cookie.stat %}{{ register_rabbitmq_cookie.stat.checksum }}{% endif %}"
 
 - set_fact:
-    cookie_needs_to_be_updated: "{{ rabbitmq_existsing_cookie_sha1 and register_rabbitmq_cookie.stat.exists and rabbitmq_existsing_cookie_sha1 != rabbitmq_cookie_sha1 }}"
+    rabbitmq_rabbitmq_cookie_needs_to_be_updated: "{{ rabbitmq_existsing_cookie_sha1 and register_rabbitmq_cookie.stat.exists and rabbitmq_existsing_cookie_sha1 != rabbitmq_cookie_sha1 }}"
 
 - name: "Stop rabbitmq before updating cookie"
   # stop it immediately, rather than "notify" and call "flush_handlers" because
   # a) it might flush other handers in queue and b) the service must be stopped
-  # here in any case when cookie_needs_to_be_updated is treu
+  # here in any case when rabbitmq_cookie_needs_to_be_updated is treu
   service:
     name: "{{ rabbitmq_service }}"
     state: stopped
   when:
-    - cookie_needs_to_be_updated
+    - rabbitmq_cookie_needs_to_be_updated
 
 # TODO there is no way to replace cookie without destroying database while a cluster of rabbitmq is running
 # - name: Wipe the database
-#   when: "{{ cookie_needs_to_be_updated }}"
+#   when: "{{ rabbitmq_cookie_needs_to_be_updated }}"
 
 - name: Update erlang cookie
   template:
@@ -36,7 +36,7 @@
     group: "{{ rabbitmq_group }}"
   notify: Restart rabbitmq
   when:
-    - cookie_needs_to_be_updated
+    - rabbitmq_cookie_needs_to_be_updated
 
 - name: Create erlang cookie
   template:
