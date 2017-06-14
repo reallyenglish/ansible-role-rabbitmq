@@ -46,7 +46,7 @@
   template:
     src: rabbitmq-env.conf.j2
     dest: "{{ rabbitmq_env_conf }}"
-    validate: sh %s
+    validate: sh -n %s
   notify: Restart rabbitmq
 
 - name: Start rabbitmq
