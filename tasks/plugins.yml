@@ -18,7 +18,7 @@
     that: register_rabbitmq_plugins_dir_stat.stat.isdir
 
 - name: Copy plugins to `plugins` directory from _local_ rabbitmq_plugins_local_src_dir
-  # XXX to test this task, you need a valid, compiled plug-in for test
+  # XXX this task is not tested in serverspec, but in integration test
   copy:
     src: "{{ rabbitmq_plugins_local_src_dir }}/"
     dest: "{{ rabbitmq_plugins_dir }}"

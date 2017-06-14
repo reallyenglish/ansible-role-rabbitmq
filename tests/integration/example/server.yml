@@ -18,8 +18,11 @@
       "192.168.21.202":
         - server2.virtualbox.reallyenglish.com
 
+    rabbitmq_plugins_local_src_dir: files/rabbitmq_plugins
     rabbitmq_plugins:
       - rabbitmq_management
+      - rabbitmq_delayed_message_exchange
+    rabbitmq_cookie: "ABCDEFGHIJK"
     rabbitmq_env:
       RABBITMQ_NODE_IP_ADDRESS: "{{ ansible_em1.ipv4[0].address }}"
       RABBITMQ_USE_LONGNAME: "true"
