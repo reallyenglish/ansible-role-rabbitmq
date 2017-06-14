@@ -74,7 +74,11 @@ describe file(config) do
 end
 
 describe file(env_config) do
+  it { should exist }
   it { should be_file }
+  it { should be_mode 644 }
+  it { should be_owned_by default_user }
+  it { should be_grouped_into default_group }
   its(:content) { should match(/^FOO="1"/) }
   its(:content) { should match(/^BAR="2"$/) }
   its(:content) { should match(/^USE_LONGNAME="1"$/) }
@@ -94,17 +98,6 @@ describe file(db_dir) do
   it { should be_mode 755 }
   it { should be_owned_by user }
   it { should be_grouped_into group }
-end
-
-case os[:family]
-when "freebsd"
-  describe file("/etc/rc.conf.d/rabbitmq") do
-    it { should exist }
-    it { should be_file }
-    it { should be_mode 644 }
-    it { should be_owned_by default_user }
-    it { should be_grouped_into default_group }
-  end
 end
 
 describe service(service) do
