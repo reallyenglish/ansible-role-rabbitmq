@@ -23,6 +23,7 @@ when "freebsd"
   env_config = "/usr/local/etc/rabbitmq/rabbitmq-env.conf"
   default_group = "wheel"
 end
+cookie_file = "#{db_dir}/.erlang.cookie"
 
 describe package(package) do
   it { should be_installed }
@@ -48,6 +49,15 @@ when "ubuntu"
     it { should be_grouped_into default_group }
     its(:content) { should match(/^ulimit -n 4096$/) }
   end
+end
+
+describe file(cookie_file) do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 600 }
+  it { should be_owned_by user }
+  it { should be_grouped_into group }
+  its(:content) { should match(/^ABCDEFGHIJK$/) }
 end
 
 describe file(config) do
