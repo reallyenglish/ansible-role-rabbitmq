@@ -57,9 +57,7 @@
     enabled: true
     state: started
 
-- name: Enable plugins
-  rabbitmq_plugin:
-    names: "{{ rabbitmq_plugins | join(',') }}"
+- include: plugins.yml
 
 - name: Create vhosts
   rabbitmq_vhost:

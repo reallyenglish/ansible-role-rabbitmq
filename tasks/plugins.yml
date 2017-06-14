@@ -1,0 +1,31 @@
+---
+
+- name: Get plugins_dir from rabbitmqctl environment
+  shell: rabbitmqctl environment | grep -A 1 plugins_dir | grep -oE '"/.+"' | cut -d ':' -f 2 | tr -d '"'
+  register: register_rabbitmqctl_environment_plugins_dir
+  changed_when: false
+
+- set_fact:
+    rabbitmq_plugins_dir: "{{ register_rabbitmqctl_environment_plugins_dir.stdout }}"
+
+- name: Get stat of rabbitmq_plugins_dir
+  stat:
+    path: "{{ rabbitmq_plugins_dir }}"
+  register: register_rabbitmq_plugins_dir_stat
+
+- name: Assert rabbitmq_plugins_dir is directory
+  assert:
+    that: register_rabbitmq_plugins_dir_stat.stat.isdir
+
+- name: Copy plugins to `plugins` directory from _local_ rabbitmq_plugins_local_src_dir
+  # XXX to test this task, you need a valid, compiled plug-in for test
+  copy:
+    src: "{{ rabbitmq_plugins_local_src_dir }}/"
+    dest: "{{ rabbitmq_plugins_dir }}"
+  when:
+    - rabbitmq_plugins_local_src_dir is defined
+    - rabbitmq_plugins_local_src_dir | length() > 0
+
+- name: Enable plugins
+  rabbitmq_plugin:
+    names: "{{ rabbitmq_plugins | join(',') }}"
