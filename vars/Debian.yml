@@ -2,4 +2,4 @@ __rabbitmq_service: rabbitmq-server
 __rabbitmq_db_dir: /var/lib/rabbitmq
 __rabbitmq_conf_dir: /etc/rabbitmq
 __rabbitmq_flags_default: {}
-__rabbitmq_extra_startup_command:
+__rabbitmq_extra_startup_command: []
