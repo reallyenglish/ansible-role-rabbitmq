@@ -47,7 +47,6 @@ when "ubuntu"
     it { should be_mode 644 }
     it { should be_owned_by default_user }
     it { should be_grouped_into default_group }
-    its(:content) { should match(/^ulimit -n 4096$/) }
   end
 end
 
@@ -77,8 +76,8 @@ describe file(env_config) do
   it { should exist }
   it { should be_file }
   it { should be_mode 644 }
-  it { should be_owned_by default_user }
-  it { should be_grouped_into default_group }
+  it { should be_owned_by os[:family] == "freebsd" ? default_user : user }
+  it { should be_grouped_into os[:family] == "freebsd" ? default_user : user }
   its(:content) { should match(/^FOO="1"/) }
   its(:content) { should match(/^BAR="2"$/) }
   its(:content) { should match(/^USE_LONGNAME="1"$/) }
