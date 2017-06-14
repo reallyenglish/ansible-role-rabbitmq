@@ -1,7 +1,7 @@
 ---
 
 - name: Get plugins_dir from rabbitmqctl environment
-  shell: rabbitmqctl environment | grep -A 1 plugins_dir | grep -oE '"/.+"' | cut -d ':' -f 2 | tr -d '"'
+  shell: "{% if ansible_os_family == 'Debian' %}rabbitmqctl environment | grep -A 1 plugins_dir | grep -oE '\"/.+\"' | cut -d ':' -f 2 | tr -d '\"'{% else %}rabbitmqctl environment | grep plugins_dir | grep -oE '\"/.+\"' | cut -d ':' -f 2 | tr -d '\"'{% endif %}"
   register: register_rabbitmqctl_environment_plugins_dir
   changed_when: false
 
