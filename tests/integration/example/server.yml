@@ -9,4 +9,17 @@
 
   pre_tasks:
   roles:
-    - foo
+    - reallyenglish.hosts
+    - ansible-role-rabbitmq
+  vars:
+    hosts_map:
+      "192.168.21.201":
+        - server1.virtualbox.reallyenglish.com
+      "192.168.21.202":
+        - server2.virtualbox.reallyenglish.com
+
+    rabbitmq_plugins:
+      - rabbitmq_management
+    rabbitmq_env:
+      RABBITMQ_NODE_IP_ADDRESS: "{{ ansible_em1.ipv4[0].address }}"
+      RABBITMQ_USE_LONGNAME: "true"
