@@ -2,16 +2,16 @@
   stat:
     checksum_algorithm: sha1
     path: "{{ rabbitmq_cookie_file }}"
-  register: cookie
+  register: register_rabbitmq_cookie
 
 - set_fact:
-    cookie_sha1: "{{ rabbitmq_cookie | hash('sha1') }}"
+    rabbitmq_cookie_sha1: "{{ rabbitmq_cookie | hash('sha1') }}"
 
 - set_fact:
-    existsing_cookie_sha1: "{% if 'checksum' in cookie.stat %}{{ cookie.stat.checksum }}{% endif %}"
+    rabbitmq_existsing_cookie_sha1: "{% if 'checksum' in register_rabbitmq_cookie.stat %}{{ register_rabbitmq_cookie.stat.checksum }}{% endif %}"
 
 - set_fact:
-    cookie_needs_to_be_updated: "{{ existsing_cookie_sha1 and cookie.stat.exists and existsing_cookie_sha1 != cookie_sha1 }}"
+    cookie_needs_to_be_updated: "{{ rabbitmq_existsing_cookie_sha1 and register_rabbitmq_cookie.stat.exists and rabbitmq_existsing_cookie_sha1 != rabbitmq_cookie_sha1 }}"
 
 - name: "Stop rabbitmq before updating cookie"
   # stop it immediately, rather than "notify" and call "flush_handlers" because
@@ -46,7 +46,7 @@
     owner: "{{ rabbitmq_user }}"
     group: "{{ rabbitmq_group }}"
   when:
-    - not cookie.stat.exists
+    - not register_rabbitmq_cookie.stat.exists
 
 - name: Fix permission
   # when the permission has been modified somehow after first ansible play,
