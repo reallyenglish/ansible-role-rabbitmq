@@ -20,7 +20,8 @@
   service:
     name: "{{ rabbitmq_service }}"
     state: stopped
-  when: "{{ cookie_needs_to_be_updated }}"
+  when:
+    - cookie_needs_to_be_updated
 
 # TODO there is no way to replace cookie without destroying database while a cluster of rabbitmq is running
 # - name: Wipe the database
@@ -34,7 +35,8 @@
     owner: "{{ rabbitmq_user }}"
     group: "{{ rabbitmq_group }}"
   notify: Restart rabbitmq
-  when: "{{ cookie_needs_to_be_updated }}"
+  when:
+    - cookie_needs_to_be_updated
 
 - name: Create erlang cookie
   template:
@@ -43,7 +45,8 @@
     mode: 0400
     owner: "{{ rabbitmq_user }}"
     group: "{{ rabbitmq_group }}"
-  when: "{{ not cookie.stat.exists }}"
+  when:
+    - not cookie.stat.exists
 
 - name: Fix permission
   # when the permission has been modified somehow after first ansible play,
