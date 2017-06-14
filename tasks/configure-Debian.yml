@@ -1,9 +1,10 @@
 ---
 
-- name: Create /etc/default/rabbitmq
+- name: Create /etc/default/rabbitmq-server
   template:
     src: Ubuntu.default.j2
-    dest: /etc/default/rabbitmq
+    dest: /etc/default/rabbitmq-server
     validate: sh -n %s
+    backup: yes
   notify:
     - Restart rabbitmq

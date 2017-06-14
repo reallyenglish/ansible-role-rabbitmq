@@ -41,7 +41,7 @@ when "freebsd"
     its(:content) { should match(/^rabbitmq_user="#{user}"$/) }
   end
 when "ubuntu"
-  describe file("/etc/default/rabbitmq") do
+  describe file("/etc/default/rabbitmq-server") do
     it { should exist }
     it { should be_file }
     it { should be_mode 644 }
