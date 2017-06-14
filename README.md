@@ -1,33 +1,30 @@
-ansible-role-rabbitmq
-=====================
+# ansible-role-foo
 
 A brief description of the role goes here.
 
-Requirements
-------------
+# Requirements
 
 None
 
-Role Variables
---------------
+# Role Variables
 
 | variable | description | default |
 |----------|-------------|---------|
 
 
-Dependencies
-------------
+# Dependencies
 
 None
 
-Example Playbook
-----------------
+# Example Playbook
 
+```yaml
+```
 
-License
--------
+# License
 
-Copyright (c) 2016 Tomoyuki Sakurai <tomoyukis@reallyenglish.com>
+```
+Copyright (c) 2017 Tomoyuki Sakurai <tomoyukis@reallyenglish.com>
 
 Permission to use, copy, modify, and distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
@@ -40,10 +37,10 @@ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+```
 
-Author Information
-------------------
+# Author Information
 
 Tomoyuki Sakurai <tomoyukis@reallyenglish.com>
 
-This README was created by [ansible-role-init](https://gist.github.com/trombik/d01e280f02c78618429e334d8e4995c0)
+This README was created by [qansible](https://github.com/trombik/qansible)
