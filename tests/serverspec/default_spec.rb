@@ -28,6 +28,28 @@ describe package(package) do
   it { should be_installed }
 end
 
+case os[:family]
+when "freebsd"
+  describe file("/etc/rc.conf.d/rabbitmq") do
+    it { should exist }
+    it { should be_file }
+    it { should be_mode 644 }
+    it { should be_owned_by default_user }
+    it { should be_grouped_into default_group }
+    its(:content) { should match(/^RABBITMQ_LOG_BASE="#{ Regexp.escape(log_dir) }"$/) }
+    its(:content) { should match(/^rabbitmq_user="#{user}"$/) }
+  end
+when "ubuntu"
+  describe file("/etc/default/rabbitmq") do
+    it { should exist }
+    it { should be_file }
+    it { should be_mode 644 }
+    it { should be_owned_by default_user }
+    it { should be_grouped_into default_group }
+    its(:content) { should match(/^ulimit -n 4096$/) }
+  end
+end
+
 describe file(config) do
   it { should exist }
   it { should be_file }
@@ -82,13 +104,12 @@ end
 
 ports.each do |p|
   describe port(p) do
-    if (p == 25_672) && os[:family] =~ /^(debian|ubuntu)$/
-      it do
-        pending("the official deb package from debian is too old and behaves differently")
-        should be_listening
-      end
-    else
-      it { should be_listening }
-    end
+    it { should be_listening }
   end
+end
+
+describe command("rabbitmq-plugins list") do
+  its(:exit_status) { should eq 0 }
+  its(:stderr) { should eq "" }
+  its(:stdout) { should match(/\s+rabbitmq_management\s+\d+\.\d+\.\d+/) }
 end

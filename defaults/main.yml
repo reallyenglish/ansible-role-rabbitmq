@@ -5,7 +5,9 @@ rabbitmq_db_dir: "{{ __rabbitmq_db_dir }}"
 rabbitmq_service: "{{ __rabbitmq_service }}"
 rabbitmq_conf_dir: "{{ __rabbitmq_conf_dir }}"
 rabbitmq_conf: "{{ rabbitmq_conf_dir }}/rabbitmq.config"
-rabbitmq_flags: ""
+rabbitmq_flags: {}
+rabbitmq_flags_default: "{{ __rabbitmq_flags_default }}"
+rabbitmq_extra_startup_command: "{{ __rabbitmq_extra_startup_command }}" # ubuntu only
 
 rabbitmq_env_conf: "{{ rabbitmq_conf_dir }}/rabbitmq-env.conf"
 rabbitmq_env: {}

@@ -1,1 +1,5 @@
+# Managed by ansible
 
+{% for k, v in rabbitmq_flags_merged | dictsort() %}
+{{ k }}="{{ v }}"
+{% endfor %}

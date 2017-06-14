@@ -1,0 +1,8 @@
+# Managed by ansible
+{% for c in rabbitmq_extra_startup_command %}
+{{ c }}
+
+{% endfor %}
+{% for i in rabbitmq_flags_merged | dictsort()  %}
+{{ i }}
+{% endfor %}
