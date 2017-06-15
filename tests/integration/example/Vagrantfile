@@ -68,7 +68,7 @@ Vagrant.configure("2") do |config|
 
   1.upto(2) do |index|
     config.vm.define "server#{index}" do |c|
-      ip = "192.168.21.#{ 200 + index }"
+      ip = "192.168.21.#{200 + index}"
       c.vm.network "private_network", ip: ip
       c.vm.hostname = "server#{index}.virtualbox.reallyenglish.com"
       c.vm.provision :ansible do |ansible|
