@@ -49,11 +49,15 @@
 - name: Enable plugins
   rabbitmq_plugin:
     names: "{{ rabbitmq_plugins_enable  | map(attribute = 'name') | join(',') }}"
+    state: enabled
   when: rabbitmq_plugins_enable | length > 0
 
 - name: Disable plugins
   rabbitmq_plugin:
+    # XXX you cannot test the task in unit test. better to test in integration
+    # test
     names: "{{ rabbitmq_plugins_disable | map(attribute = 'name') | join(',') }}"
+    state: disabled
   when: rabbitmq_plugins_disable | length > 0
 
 - name: Get list of enabled plugins
