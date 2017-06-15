@@ -39,6 +39,7 @@ when "freebsd"
     it { should be_grouped_into default_group }
     its(:content) { should match(/^RABBITMQ_LOG_BASE="#{ Regexp.escape(log_dir) }"$/) }
     its(:content) { should match(/^rabbitmq_user="#{user}"$/) }
+    its(:content) { should match(/FOO="bar"/) }
   end
 when "ubuntu"
   describe file("/etc/default/rabbitmq-server") do
@@ -47,6 +48,7 @@ when "ubuntu"
     it { should be_mode 644 }
     it { should be_owned_by default_user }
     it { should be_grouped_into default_group }
+    its(:content) { should match(/FOO="bar"/) }
   end
 end
 

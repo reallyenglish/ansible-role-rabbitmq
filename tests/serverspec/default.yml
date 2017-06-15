@@ -10,7 +10,8 @@
     rabbitmq_plugins:
       - name: rabbitmq_management
         state: enabled
-    rabbitmq_flags: {}
+    rabbitmq_flags:
+      FOO: bar
     rabbitmq_config: |
       [
         {rabbit,
