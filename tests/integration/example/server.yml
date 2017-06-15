@@ -20,8 +20,10 @@
 
     rabbitmq_plugins_local_src_dir: files/rabbitmq_plugins
     rabbitmq_plugins:
-      - rabbitmq_management
-      - rabbitmq_delayed_message_exchange
+      - name: rabbitmq_management
+        state: enabled
+      - name: rabbitmq_delayed_message_exchange
+        state: enabled
     rabbitmq_cookie: "ABCDEFGHIJK"
     rabbitmq_env:
       RABBITMQ_NODE_IP_ADDRESS: "{{ ansible_em1.ipv4[0].address }}"
