@@ -54,8 +54,8 @@
 
 - name: Disable plugins
   rabbitmq_plugin:
-    # XXX you cannot test the task in unit test. better to test in integration
-    # test
+    # XXX you cannot test the task in unit test because you need to install,
+    # and configure rabbitmq to add a plug-in
     names: "{{ rabbitmq_plugins_disable | map(attribute = 'name') | join(',') }}"
     state: disabled
   when: rabbitmq_plugins_disable | length > 0
