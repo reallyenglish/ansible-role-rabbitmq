@@ -8,5 +8,6 @@
       BAR: 2
       USE_LONGNAME: 1
     rabbitmq_plugins:
-      - rabbitmq_management
+      - name: rabbitmq_management
+        state: enabled
     rabbitmq_flags: {}
