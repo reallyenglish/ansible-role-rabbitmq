@@ -1,12 +1,7 @@
 ---
 
 - name: Get plugins_dir from rabbitmqctl environment
-  # XXX the python one-liner is to normalize output of rabbitmqctl. the output
-  # differs under unknown (to me) conditions. sed(1) is tricky in this task as
-  # you cannot use `\n`.
-  # TODO the proper way to parse the output is to pipe it to erl, eval it, and
-  # print the value of plugins_dir.
-  shell: "rabbitmqctl environment | python -c \"import sys; import re; sys.stdout.write(re.sub('{plugins_dir,\\n', '{plugins_dir,', sys.stdin.read()))\" | grep plugins_dir | grep -oE '\"/.+\"' | cut -d ':' -f 2 | tr -d '\"'"
+  shell: "rabbitmqctl eval '{ok, Dir} = application:get_env(rabbit, plugins_dir), io:fwrite(\"~s~n\", [Dir]).' | grep -v '^ok$'"
   register: register_rabbitmqctl_environment_plugins_dir
   changed_when: false
 
