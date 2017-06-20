@@ -17,7 +17,7 @@
   with_items: "{{ rabbitmq_plugins }}"
 
 - set_fact:
-    # TODO remove equalto.py from `test_plgins`. see #9
+    # TODO remove equalto.py from `test_plugins`. see #9
     rabbitmq_plugins_enable:  "{{ rabbitmq_plugins | selectattr('state', 'equalto', 'enabled')  | list }}"
 
 - set_fact:
