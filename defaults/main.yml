@@ -5,23 +5,19 @@ rabbitmq_db_dir: "{{ __rabbitmq_db_dir }}"
 rabbitmq_service: "{{ __rabbitmq_service }}"
 rabbitmq_conf_dir: "{{ __rabbitmq_conf_dir }}"
 rabbitmq_conf: "{{ rabbitmq_conf_dir }}/rabbitmq.config"
-rabbitmq_flags: ""
+rabbitmq_flags: {}
+rabbitmq_flags_default: "{{ __rabbitmq_flags_default }}"
+rabbitmq_extra_startup_command: "{{ __rabbitmq_extra_startup_command }}" # ubuntu only
 
 rabbitmq_env_conf: "{{ rabbitmq_conf_dir }}/rabbitmq-env.conf"
 rabbitmq_env: {}
 
-rabbitmq_cookie_file: "{{ __rabbitmq_db_dir }}/.erlang.cookie"
+rabbitmq_cookie_file: "{{ rabbitmq_db_dir }}/.erlang.cookie"
 rabbitmq_cookie: ""
-rabbitmq_ulimit: 4096
 
-rabbitmq_conf_tcp_listeners: [5672]
-rabbitmq_conf_log_levels: info
-rabbitmq_conf_high_watermark: 0.4
-rabbitmq_conf_high_watermark_paging_ratio: 0.5
+rabbitmq_config: ""
 
-# XXX you cannot use integer here
-rabbitmq_conf_disk_free_limit: 50MB
-
+rabbitmq_plugins_local_src_dir: "" # local path to a directory where plug-ins are kept
 rabbitmq_plugins: []
 
 rabbitmq_users: []

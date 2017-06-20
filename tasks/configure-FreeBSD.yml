@@ -1,0 +1,8 @@
+---
+
+- name: Create rc.conf.d/rabbitmq
+  template:
+    src: rc.conf-FreeBSD.j2
+    dest: /etc/rc.conf.d/rabbitmq
+    validate: sh -n %s
+

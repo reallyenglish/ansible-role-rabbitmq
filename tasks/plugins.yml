@@ -1,0 +1,77 @@
+---
+
+- name: Get plugins_dir from rabbitmqctl environment
+  shell: "rabbitmqctl eval '{ok, Dir} = application:get_env(rabbit, plugins_dir), io:fwrite(\"~s~n\", [Dir]).' | grep -v '^ok$'"
+  register: register_rabbitmqctl_environment_plugins_dir
+  changed_when: false
+
+- set_fact:
+    rabbitmq_plugins_dir: "{{ register_rabbitmqctl_environment_plugins_dir.stdout }}"
+
+- name: Assert all elements in rabbitmq_plugins have either `enabled` or `disabled`
+  assert:
+    msg: elements in rabbitmq_plugins must have `state` attribute set to either `enabled` or `disabled`
+    that:
+      - "'state' in item"
+      - item.state == 'enabled' or item.state == 'disabled'
+  with_items: "{{ rabbitmq_plugins }}"
+
+- set_fact:
+    # TODO remove equalto.py from `test_plugins`. see #9
+    rabbitmq_plugins_enable:  "{{ rabbitmq_plugins | selectattr('state', 'equalto', 'enabled')  | list }}"
+
+- set_fact:
+    rabbitmq_plugins_disable: "{{ rabbitmq_plugins | selectattr('state', 'equalto', 'disabled') | list }}"
+
+- name: Get stat of rabbitmq_plugins_dir
+  stat:
+    path: "{{ rabbitmq_plugins_dir }}"
+  register: register_rabbitmq_plugins_dir_stat
+
+- name: Assert rabbitmq_plugins_dir is directory
+  assert:
+    that: register_rabbitmq_plugins_dir_stat.stat.isdir
+
+- name: Copy plugins to `plugins` directory from _local_ rabbitmq_plugins_local_src_dir
+  # XXX this task is not tested in serverspec, but in integration test
+  copy:
+    src: "{{ rabbitmq_plugins_local_src_dir }}/"
+    dest: "{{ rabbitmq_plugins_dir }}"
+  when:
+    - rabbitmq_plugins_local_src_dir is defined
+    - rabbitmq_plugins_local_src_dir | length > 0
+
+- name: Enable plugins
+  rabbitmq_plugin:
+    names: "{{ rabbitmq_plugins_enable  | map(attribute = 'name') | join(',') }}"
+    state: enabled
+  when: rabbitmq_plugins_enable | length > 0
+
+- name: Disable plugins
+  rabbitmq_plugin:
+    # XXX you cannot test the task in unit test because you need to install,
+    # and configure rabbitmq to add a plug-in
+    names: "{{ rabbitmq_plugins_disable | map(attribute = 'name') | join(',') }}"
+    state: disabled
+  when: rabbitmq_plugins_disable | length > 0
+
+- name: Get list of enabled plugins
+  shell: "rabbitmq-plugins -E list | grep -E '^\\[' | cut -f 2 -d ' '"
+  register: register_rabbitmq_plugins_list_e
+  changed_when: false
+
+- name: Assert plug-ins with `state` enabled in rabbitmq_plugins are enabled
+  assert:
+    that:
+      - item.name in register_rabbitmq_plugins_list_e.stdout_lines
+  with_items: "{{ rabbitmq_plugins_enable }}"
+  when:
+    - rabbitmq_plugins_enable | length > 0
+
+- name: Assert plug-ins with `state` disabled in rabbitmq_plugins are disabled
+  assert:
+    that:
+      - ! item.name in register_rabbitmq_plugins_list_e.stdout_lines
+  with_items: "{{ rabbitmq_plugins_disable }}"
+  when:
+    - rabbitmq_plugins_disable | length > 0

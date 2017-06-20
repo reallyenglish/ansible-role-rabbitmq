@@ -1,5 +1,4 @@
 require "infrataster/rspec"
-require "capybara"
 
 ENV["VAGRANT_CWD"] = File.dirname(__FILE__)
 ENV["LANG"] = "C"
@@ -35,7 +34,12 @@ Infrataster::Server.define(
 )
 Infrataster::Server.define(
   :server1,
-  "192.168.21.200",
+  "192.168.21.201",
+  vagrant: true
+)
+Infrataster::Server.define(
+  :server2,
+  "192.168.21.202",
   vagrant: true
 )
 

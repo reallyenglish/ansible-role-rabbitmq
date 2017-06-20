@@ -3,7 +3,12 @@
 
 - include_vars: "{{ ansible_os_family }}.yml"
 
+- set_fact:
+    rabbitmq_flags_merged: "{{ rabbitmq_flags_default | combine(rabbitmq_flags) }}"
+
 - include: "install-{{ ansible_os_family }}.yml"
+
+- include: "configure-{{ ansible_os_family }}.yml"
 
 - name: Create log directory
   file:
@@ -41,7 +46,9 @@
   template:
     src: rabbitmq-env.conf.j2
     dest: "{{ rabbitmq_env_conf }}"
-    validate: sh %s
+    validate: sh -n %s
+    owner: "{{ rabbitmq_user }}"
+    group: "{{ rabbitmq_group }}"
   notify: Restart rabbitmq
 
 - name: Start rabbitmq
@@ -50,9 +57,7 @@
     enabled: true
     state: started
 
-- name: Enable plugins
-  rabbitmq_plugin:
-    names: "{{ rabbitmq_plugins | join(',') }}"
+- include: plugins.yml
 
 - name: Create vhosts
   rabbitmq_vhost:

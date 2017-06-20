@@ -13,7 +13,9 @@ provisioner:
   ansible_verbosity: 1
   ansible_verbose: true
   ansible_extra_flags: <%= ENV['ANSIBLE_EXTRA_FLAGS'] %>
+  # requirements_path: requirements.yml
   http_proxy: <%= ENV['ANSIBLE_PROXY'] %>
+  idempotency_test: true
   additional_copy_path:
     - extra_modules
     - filter_plugins
@@ -21,19 +23,19 @@ provisioner:
 
 platforms:
   - name: freebsd-10.3-amd64
-    provisioner:
-      extra_vars:
-        ansible_python_interpreter: '/usr/local/bin/python'
     driver:
       box: trombik/ansible-freebsd-10.3-amd64
       box_check_update: false
     driver_config:
       ssh:
         shell: '/bin/sh'
+    provisioner:
+      extra_vars:
+        ansible_python_interpreter: '/usr/local/bin/python'
 
-  - name: ubuntu-14.04-amd64
+  - name: ubuntu-16.04-amd64
     driver:
-      box: trombik/ansible-ubuntu-14.04-amd64
+      box: trombik/ansible-ubuntu-16.04-amd64
 
 suites:
   - name: default

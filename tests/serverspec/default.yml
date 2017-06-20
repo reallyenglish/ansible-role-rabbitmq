@@ -8,4 +8,19 @@
       BAR: 2
       USE_LONGNAME: 1
     rabbitmq_plugins:
-      - rabbitmq_management
+      - name: rabbitmq_management
+        state: enabled
+    rabbitmq_flags:
+      FOO: bar
+    rabbitmq_config: |
+      [
+        {rabbit,
+         [
+          {tcp_listeners, [5672] },
+          {log_levels, [{connection, info}]},
+          {vm_memory_high_watermark, 0.4},
+          {vm_memory_high_watermark_paging_ratio, 0.5},
+          {disk_free_limit, "50MB"}
+         ]
+        }
+      ].

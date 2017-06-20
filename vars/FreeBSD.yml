@@ -1,3 +1,6 @@
 __rabbitmq_conf_dir: /usr/local/etc/rabbitmq
 __rabbitmq_service: rabbitmq
 __rabbitmq_db_dir: /var/db/rabbitmq
+__rabbitmq_flags_default:
+  rabbitmq_user: "{{ rabbitmq_user }}"
+  RABBITMQ_LOG_BASE: "{{ rabbitmq_log_dir }}"

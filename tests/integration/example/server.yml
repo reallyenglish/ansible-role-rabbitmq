@@ -9,4 +9,34 @@
 
   pre_tasks:
   roles:
-    - foo
+    - reallyenglish.hosts
+    - ansible-role-rabbitmq
+  vars:
+    hosts_map:
+      "192.168.21.201":
+        - server1.virtualbox.reallyenglish.com
+      "192.168.21.202":
+        - server2.virtualbox.reallyenglish.com
+
+    rabbitmq_plugins_local_src_dir: files/rabbitmq_plugins
+    rabbitmq_plugins:
+      - name: rabbitmq_management
+        state: enabled
+      - name: rabbitmq_delayed_message_exchange
+        state: enabled
+    rabbitmq_cookie: "ABCDEFGHIJK"
+    rabbitmq_env:
+      RABBITMQ_NODE_IP_ADDRESS: "{{ ansible_em1.ipv4[0].address }}"
+      RABBITMQ_USE_LONGNAME: "true"
+    rabbitmq_config: |
+      [
+        {rabbit,
+         [
+          {tcp_listeners, [5672] },
+          {log_levels, [{connection, info}]},
+          {vm_memory_high_watermark, 0.4},
+          {vm_memory_high_watermark_paging_ratio, 0.5},
+          {disk_free_limit, "50MB"}
+         ]
+        }
+      ].

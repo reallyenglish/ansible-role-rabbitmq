@@ -8,5 +8,4 @@
     no_proxy: "{{ no_proxy | default() }}"
 
   pre_tasks:
-  roles:
-    - foo
+  roles: []
