@@ -7,7 +7,12 @@ config  = "/etc/rabbitmq/rabbitmq.config"
 env_config = "/etc/rabbitmq/rabbitmq-env.conf"
 user    = "rabbitmq"
 group   = "rabbitmq"
-ports   = [5672, 4369, 25_672] # AMQP transport, Erlang Port Mapper (epmd), rabbitmq node port
+ports   = [
+  5672,   # AMQP transport
+  4369,   # Erlang Port Mapper, epmd
+  25_672, # rabbitmq node port
+  15_672  # rabbitmq-management
+]
 log_dir = "/var/log/rabbitmq"
 db_dir  = "/var/lib/rabbitmq"
 default_user = "root"
@@ -112,8 +117,9 @@ ports.each do |p|
   end
 end
 
-describe command("rabbitmq-plugins list") do
+describe command("rabbitmq-plugins list -E") do
   its(:exit_status) { should eq 0 }
   its(:stderr) { should eq "" }
   its(:stdout) { should match(/\s+rabbitmq_management\s+\d+\.\d+\.\d+/) }
+  its(:stdout) { should_not match(/\s+rabbitmq_trust_store\s+\d+\.\d+\.\d+/) }
 end
