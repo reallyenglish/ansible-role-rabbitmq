@@ -142,5 +142,5 @@ end
 describe command("rabbitmqctl cluster_status") do
   its(:exit_status) { should eq 0 }
   its(:stderr) { should eq "" }
-  its(:stdout) { should  match(/#{Regexp.escape("{cluster_name,<<\"foo\">>},")}/) }
+  its(:stdout) { should match(/#{Regexp.escape("{cluster_name,<<\"foo\">>},")}/) }
 end

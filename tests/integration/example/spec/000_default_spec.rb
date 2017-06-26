@@ -40,19 +40,18 @@ context "after provisioning finished" do
     4369, # epmd
     5672, # AMQP
     5671, # AMQP TLS
-    25672 # Erlang
+    25_672 # Erlang
   ]
-  servers =[
+  servers = [
     :server1,
     :server2,
     :server3
   ]
   servers.each do |s|
     describe server(s) do
-      others = servers.reject{|i| i == s }
+      others = servers.reject { |i| i == s }
       others.each do |dest|
         describe firewall(server(dest)) do
-
           # IP address is used in this test
           it { is_expected.to be_reachable }
           ports.each do |p|
