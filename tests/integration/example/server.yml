@@ -17,6 +17,8 @@
         - server1.virtualbox.reallyenglish.com
       "192.168.21.202":
         - server2.virtualbox.reallyenglish.com
+      "192.168.21.203":
+        - server3.virtualbox.reallyenglish.com
 
     rabbitmq_plugins_local_src_dir: files/rabbitmq_plugins
     rabbitmq_plugins:
@@ -40,3 +42,9 @@
          ]
         }
       ].
+    rabbitmq_cluster_enable: yes
+    rabbitmq_cluster_name: foo
+    rabbitmq_cluster_nodes:
+      - server1.virtualbox.reallyenglish.com
+      - server2.virtualbox.reallyenglish.com
+      - server3.virtualbox.reallyenglish.com
