@@ -52,7 +52,7 @@
     register: register_rabbitmq_cluster_name_again
 
   - assert:
-      that: register_rabbitmq_cluster_name.stdout == rabbitmq_cluster_name
+      that: register_rabbitmq_cluster_name_again.stdout == rabbitmq_cluster_name
   when:
     - not rabbitmq_cluster_nodes[0] == ansible_fqdn
     - not register_rabbitmq_cluster_name.stdout == rabbitmq_cluster_name
