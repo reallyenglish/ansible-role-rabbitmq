@@ -123,3 +123,18 @@ describe command("rabbitmq-plugins list -E") do
   its(:stdout) { should match(/\s+rabbitmq_management\s+\d+\.\d+\.\d+/) }
   its(:stdout) { should_not match(/\s+rabbitmq_trust_store\s+\d+\.\d+\.\d+/) }
 end
+
+describe command("rabbitmqctl list_users | grep -v '^Listing users'") do
+  its(:exit_status) { should eq 0 }
+  its(:stderr) { should eq "" }
+  its(:stdout) { should match(/^vagrant\s+\[administrator\]/) }
+  its(:stdout) { should_not match(/^guest\s+/) }
+end
+
+describe command("curl -s -XGET -u vagrant:vagrant http://localhost:15672/api/overview | python -m json.tool > /tmp/api_overview") do
+  its(:exit_status) { should eq 0 }
+end
+
+describe file("/tmp/api_overview") do
+  its(:content_as_json) { should include("cluster_name" => "rabbit@default-freebsd-103-amd64") }
+end
