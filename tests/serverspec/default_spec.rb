@@ -136,5 +136,11 @@ describe command("curl -s -XGET -u vagrant:vagrant http://localhost:15672/api/ov
 end
 
 describe file("/tmp/api_overview") do
-  its(:content_as_json) { should include("cluster_name" => "rabbit@default-freebsd-103-amd64") }
+  its(:content_as_json) { should include("cluster_name" => "foo") }
+end
+
+describe command("rabbitmqctl cluster_status") do
+  its(:exit_status) { should eq 0 }
+  its(:stderr) { should eq "" }
+  its(:stdout) { should  match(/#{Regexp.escape("{cluster_name,<<\"foo\">>},")}/) }
 end

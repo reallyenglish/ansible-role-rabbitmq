@@ -73,3 +73,7 @@
     vhost: "{{ item.vhost }}"
     tags: "administrator"
   with_items: "{{ rabbitmq_users }}"
+
+- include: configure-cluster.yml
+  when:
+    - rabbitmq_cluster_enable

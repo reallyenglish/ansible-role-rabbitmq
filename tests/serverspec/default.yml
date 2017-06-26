@@ -35,3 +35,7 @@
          ]
         }
       ].
+    rabbitmq_cluster_enable: yes
+    rabbitmq_cluster_name: "foo"
+    rabbitmq_cluster_nodes:
+      - "{{ ansible_fqdn }}"

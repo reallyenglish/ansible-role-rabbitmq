@@ -22,3 +22,6 @@ rabbitmq_plugins: []
 
 rabbitmq_users: []
 rabbitmq_vhosts: []
+rabbitmq_cluster_enable: no
+rabbitmq_cluster_name: ""
+rabbitmq_cluster_nodes: []
