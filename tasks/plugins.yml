@@ -1,7 +1,7 @@
 ---
 
 - name: Get plugins_dir from rabbitmqctl environment
-  shell: "rabbitmqctl eval '{ok, Dir} = application:get_env(rabbit, plugins_dir), io:fwrite(\"~s~n\", [Dir]).' | grep -v '^ok$'"
+  shell: "rabbitmqctl eval '{ok, Dir} = application:get_env(rabbit, plugins_dir), io:fwrite(\"~s~n\", [Dir]).' | head -n1"
   register: register_rabbitmqctl_environment_plugins_dir
   changed_when: false
 

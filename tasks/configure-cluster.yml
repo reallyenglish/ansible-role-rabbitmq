@@ -6,7 +6,7 @@
       - rabbitmq_cluster_name | length > 0
 
 - name: Get cluster name
-  shell: "rabbitmqctl eval 'io:fwrite(\"~s~n\", [rabbit_nodes:cluster_name()]).' | grep -v '^ok$'"
+  shell: "rabbitmqctl eval 'io:fwrite(\"~s~n\", [rabbit_nodes:cluster_name()]).' | head -n1"
   register: register_rabbitmq_cluster_name
   always_run: yes
   changed_when: false
@@ -22,7 +22,7 @@
     register: register_set_cluster_name
 
   - name: Get cluster name again
-    shell: "rabbitmqctl eval 'io:fwrite(\"~s~n\", [rabbit_nodes:cluster_name()]).' | grep -v '^ok$'"
+    shell: "rabbitmqctl eval 'io:fwrite(\"~s~n\", [rabbit_nodes:cluster_name()]).' | head -n1"
     register: register_rabbitmq_cluster_name_again
     changed_when: false
 
