@@ -124,7 +124,7 @@ describe command("rabbitmq-plugins list -E -m") do
   its(:stdout) { should_not match(/^rabbitmq_trust_store$/) }
 end
 
-describe command("rabbitmqctl list_users | grep -v '^Listing users'") do
+describe command("rabbitmqctl list_users -q") do
   its(:exit_status) { should eq 0 }
   its(:stderr) { should eq "" }
   its(:stdout) { should match(/^vagrant\s+\[administrator\]/) }
