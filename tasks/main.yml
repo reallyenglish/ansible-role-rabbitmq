@@ -57,7 +57,7 @@
     enabled: true
     state: started
 
-- name:
+- name: Enable rabbitmq_management
   rabbitmq_plugin:
     names: "rabbitmq_management"
     state: enabled
