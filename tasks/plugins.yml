@@ -1,6 +1,7 @@
 ---
 
 - name: Get plugins_dir from rabbitmqctl environment
+  # XXX it seems no APIs return plugins_dir
   shell: "rabbitmqctl eval '{ok, Dir} = application:get_env(rabbit, plugins_dir), io:fwrite(\"~s~n\", [Dir]).' | head -n1"
   register: register_rabbitmqctl_environment_plugins_dir
   changed_when: false

@@ -57,13 +57,22 @@
     enabled: true
     state: started
 
-- include: plugins.yml
+- name:
+  rabbitmq_plugin:
+    names: "rabbitmq_management"
+    state: enabled
 
-- name: Create vhosts
-  rabbitmq_vhost:
-    name: "{{ item }}"
-    state: present
-  with_items: "{{ rabbitmq_vhosts }}"
+- name: Create a management user
+  rabbitmq_user:
+    name: "{{ rabbitmq_management_user.name }}"
+    password: "{{ rabbitmq_management_user.password }}"
+    vhost: /
+    tags: "management"
+  when:
+    - "'create' in rabbitmq_management_user"
+    - rabbitmq_management_user.create
+
+- include: plugins.yml
 
 - name: Create or remove users
   rabbitmq_user:
@@ -73,6 +82,12 @@
     vhost: "{{ item.vhost }}"
     tags: "administrator"
   with_items: "{{ rabbitmq_users }}"
+
+- name: Create vhosts
+  rabbitmq_vhost:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ rabbitmq_vhosts }}"
 
 - include: configure-cluster.yml
   when:

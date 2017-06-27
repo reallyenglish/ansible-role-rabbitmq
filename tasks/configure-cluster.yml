@@ -5,11 +5,21 @@
       - rabbitmq_cluster_name is defined
       - rabbitmq_cluster_name | length > 0
 
-- name: Get cluster name
-  shell: "rabbitmqctl eval 'io:fwrite(\"~s~n\", [rabbit_nodes:cluster_name()]).' | head -n1"
-  register: register_rabbitmq_cluster_name
-  always_run: yes
+- name: Get cluster name from API
+  uri:
+    url: http://127.0.0.1:15672/api/cluster-name
+    user: "{{ rabbitmq_management_user.name }}"
+    password: "{{ rabbitmq_management_user.password }}"
+    return_content: yes
+  register: register_rabbitmqctl_api_cluster_name
   changed_when: false
+
+- assert:
+    that:
+      - "'content' in register_rabbitmqctl_api_cluster_name"
+      - register_rabbitmqctl_api_cluster_name.content is defined
+      - "'name' in (register_rabbitmqctl_api_cluster_name.content | from_json)"
+      - (register_rabbitmqctl_api_cluster_name.content | from_json).name | length > 0
 
 - block:
   # this block is executed only on the first node listed in
@@ -21,17 +31,25 @@
     command: "rabbitmqctl set_cluster_name {{ rabbitmq_cluster_name | quote }}"
     register: register_set_cluster_name
 
-  - name: Get cluster name again
-    shell: "rabbitmqctl eval 'io:fwrite(\"~s~n\", [rabbit_nodes:cluster_name()]).' | head -n1"
-    register: register_rabbitmq_cluster_name_again
+  - name: Get cluster name from API again
+    uri:
+      url: http://127.0.0.1:15672/api/cluster-name
+      user: "{{ rabbitmq_management_user.name }}"
+      password: "{{ rabbitmq_management_user.password }}"
+      return_content: yes
+    register: register_rabbitmqctl_api_cluster_name_again
     changed_when: false
 
   - assert:
       that:
-        - register_rabbitmq_cluster_name_again.stdout == rabbitmq_cluster_name
+        - "'content' in register_rabbitmqctl_api_cluster_name_again"
+        - register_rabbitmqctl_api_cluster_name_again.content is defined
+        - "'name' in (register_rabbitmqctl_api_cluster_name_again.content | from_json)"
+        - (register_rabbitmqctl_api_cluster_name_again.content | from_json).name | length > 0
+        - (register_rabbitmqctl_api_cluster_name_again.content | from_json).name == rabbitmq_cluster_name
   when:
     - rabbitmq_cluster_nodes[0] == ansible_fqdn
-    - not register_rabbitmq_cluster_name.stdout == rabbitmq_cluster_name
+    - not (register_rabbitmqctl_api_cluster_name.content | from_json).name == rabbitmq_cluster_name
 
 - block:
   # this block is executed on the rest of nodes listed in
@@ -47,12 +65,23 @@
   - name: Start rabbitmq app
     command: rabbitmqctl start_app
 
-  - name: Get cluster_name again
-    shell: "rabbitmqctl eval 'io:fwrite(\"~s~n\", [rabbit_nodes:cluster_name()]).' | head -n1"
-    register: register_rabbitmq_cluster_name_again
+  - name: Get cluster name from API again
+    uri:
+      url: http://127.0.0.1:15672/api/cluster-name
+      user: "{{ rabbitmq_management_user.name }}"
+      password: "{{ rabbitmq_management_user.password }}"
+      return_content: yes
+    register: register_rabbitmqctl_api_cluster_name_again
+    changed_when: false
 
   - assert:
-      that: register_rabbitmq_cluster_name_again.stdout == rabbitmq_cluster_name
+      that:
+        - "'content' in register_rabbitmqctl_api_cluster_name_again"
+        - register_rabbitmqctl_api_cluster_name_again.content is defined
+        - "'name' in (register_rabbitmqctl_api_cluster_name_again.content | from_json)"
+        - (register_rabbitmqctl_api_cluster_name_again.content | from_json).name | length > 0
+        - (register_rabbitmqctl_api_cluster_name_again.content | from_json).name == rabbitmq_cluster_name
+
   when:
     - not rabbitmq_cluster_nodes[0] == ansible_fqdn
-    - not register_rabbitmq_cluster_name.stdout == rabbitmq_cluster_name
+    - not (register_rabbitmqctl_api_cluster_name.content | from_json).name == rabbitmq_cluster_name

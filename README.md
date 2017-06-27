@@ -28,6 +28,7 @@ None
 | `rabbitmq_plugins_local_src_dir` | path to _local_ directory in which additional plug-in files are kept. the directory is copied to `plugins_dir` on _remote_. the plug-ins in the directory can be installed by `rabbitmq_plugins` | `""` |
 | `rabbitmq_plugins` | list of dict of plug-ins. see below | `[]` |
 | `rabbitmq_users` | list of users in `rabbitmq` | `[]` |
+| `rabbitmq_management_user` | the user used by the role to retrieve necessary information using Management APIs (see below) | `{}` |
 | `rabbitmq_vhosts` | list of `vhosts` in `rabbitmq` | `[]` |
 
 ## `rabbitmq_flags`
@@ -47,7 +48,9 @@ FOO="bar"
 
 ## `rabbitmq_plugins`
 
-This is a list of dict of plug-ins. Each element consists of a dict.
+This is a list of dict of plug-ins. Each element consists of a dict. All keys
+described below are mandatory. Note that `rabbitmq_management` is always
+enabled regardless of this variable.
 
 | Key | Value |
 |-----|-------|
@@ -58,14 +61,26 @@ An example:
 
 ```yaml
 rabbitmq_plugins:
-  - name: rabbitmq_management
+  - name: rabbitmq_trust_store
     state: enabled
 ```
 
-This will enable `rabbitmq_management` plug-in. Note that plug-in files must be
+This will enable `rabbitmq_trust_store` plug-in. Note that plug-in files must be
 kept in `plugin_dir`. To install non-default plug-ins to `plugins_dir`, use
 `rabbitmq_plugins_local_src_dir`. Files under the directory will be copied and
 can be installed by `rabbitmq_plugins`.
+
+## `rabbitmq_management_user`
+
+This dict variable defines a management user, used by the role, to retrieve
+necessary information using Management plug-in APIs. The user is created with
+`management` tag if `create` is true.
+
+| Key | Value | Mandatory? |
+|-----|-------|------------|
+| `name` | name of the management user | yes |
+| `password` | password of the management user | yes |
+| `create` | boolean to create the user | no |
 
 ## Debian
 
@@ -85,7 +100,6 @@ can be installed by `rabbitmq_plugins`.
 | `__rabbitmq_service` | `rabbitmq` |
 | `__rabbitmq_db_dir` | `/var/db/rabbitmq` |
 | `__rabbitmq_flags_default` | `{"rabbitmq_user"=>"{{ rabbitmq_user }}", "RABBITMQ_LOG_BASE"=>"{{ rabbitmq_log_dir }}"}` |
-
 
 # Dependencies
 
