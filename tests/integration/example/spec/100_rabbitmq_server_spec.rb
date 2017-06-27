@@ -8,8 +8,8 @@ context "after provision finishes" do
         rabbitmq_delayed_message_exchange
       ).each do |p|
         it "has #{p} plug-ins installed" do
-          r = current_server.ssh_exec("sudo rabbitmq-plugins list")
-          expect(r).to match(/\s#{p}\s/)
+          r = current_server.ssh_exec("sudo rabbitmq-plugins list -E -m")
+          expect(r).to match(/^#{p}$/)
         end
       end
     end
