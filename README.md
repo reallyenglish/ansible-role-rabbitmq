@@ -118,10 +118,19 @@ None
       BAR: 2
       USE_LONGNAME: 1
     rabbitmq_plugins:
-      - name: rabbitmq_management
-        state: enabled
+      - name: rabbitmq_trust_store
+        state: disabled
     rabbitmq_flags:
       FOO: bar
+    rabbitmq_users:
+      - name: root
+        password: root
+        state: present
+        vhost: /
+      - name: guest
+        state: absent
+        vhost: /
+        password: guest
     rabbitmq_config: |
       [
         {rabbit,
@@ -134,6 +143,14 @@ None
          ]
         }
       ].
+    rabbitmq_cluster_enable: yes
+    rabbitmq_cluster_name: "foo"
+    rabbitmq_cluster_nodes:
+      - "{{ ansible_fqdn }}"
+    rabbitmq_management_user:
+      name: vagrant
+      password: vagrant
+      create: yes
 ```
 
 # License
