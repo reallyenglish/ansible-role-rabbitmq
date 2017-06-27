@@ -117,11 +117,11 @@ ports.each do |p|
   end
 end
 
-describe command("rabbitmq-plugins list -E") do
+describe command("rabbitmq-plugins list -E -m") do
   its(:exit_status) { should eq 0 }
   its(:stderr) { should eq "" }
-  its(:stdout) { should match(/\s+rabbitmq_management\s+\d+\.\d+\.\d+/) }
-  its(:stdout) { should_not match(/\s+rabbitmq_trust_store\s+\d+\.\d+\.\d+/) }
+  its(:stdout) { should match(/^rabbitmq_management$/) }
+  its(:stdout) { should_not match(/^rabbitmq_trust_store$/) }
 end
 
 describe command("rabbitmqctl list_users | grep -v '^Listing users'") do
