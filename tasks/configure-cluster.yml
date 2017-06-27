@@ -1,0 +1,58 @@
+---
+
+- assert:
+    that:
+      - rabbitmq_cluster_name is defined
+      - rabbitmq_cluster_name | length > 0
+
+- name: Get cluster name
+  shell: "rabbitmqctl eval 'io:fwrite(\"~s~n\", [rabbit_nodes:cluster_name()]).' | head -n1"
+  register: register_rabbitmq_cluster_name
+  always_run: yes
+  changed_when: false
+
+- block:
+  # this block is executed only on the first node listed in
+  # rabbitmq_cluster_nodes
+  #
+  # XXX the first node must be the first node to start because the rest of the
+  # nodes join to the first node
+  - name: Set cluster name
+    command: "rabbitmqctl set_cluster_name {{ rabbitmq_cluster_name | quote }}"
+    register: register_set_cluster_name
+
+  - name: Get cluster name again
+    shell: "rabbitmqctl eval 'io:fwrite(\"~s~n\", [rabbit_nodes:cluster_name()]).' | head -n1"
+    register: register_rabbitmq_cluster_name_again
+    changed_when: false
+
+  - assert:
+      that:
+        - register_rabbitmq_cluster_name_again.stdout == rabbitmq_cluster_name
+  when:
+    - rabbitmq_cluster_nodes[0] == ansible_fqdn
+    - not register_rabbitmq_cluster_name.stdout == rabbitmq_cluster_name
+
+- block:
+  # this block is executed on the rest of nodes listed in
+  # rabbitmq_cluster_nodes
+  #
+  # XXX the block cannot be tested in unit test
+  - name: Stop rabbitmq app
+    command: rabbitmqctl stop_app
+
+  - name: Join to cluster
+    shell: "rabbitmqctl join_cluster 'rabbit@{{ rabbitmq_cluster_nodes[0] }}'"
+
+  - name: Start rabbitmq app
+    command: rabbitmqctl start_app
+
+  - name: Get cluster_name again
+    shell: "rabbitmqctl eval 'io:fwrite(\"~s~n\", [rabbit_nodes:cluster_name()]).' | head -n1"
+    register: register_rabbitmq_cluster_name_again
+
+  - assert:
+      that: register_rabbitmq_cluster_name_again.stdout == rabbitmq_cluster_name
+  when:
+    - not rabbitmq_cluster_nodes[0] == ansible_fqdn
+    - not register_rabbitmq_cluster_name.stdout == rabbitmq_cluster_name

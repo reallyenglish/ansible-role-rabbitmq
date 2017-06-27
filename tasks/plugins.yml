@@ -1,7 +1,7 @@
 ---
 
 - name: Get plugins_dir from rabbitmqctl environment
-  shell: "rabbitmqctl eval '{ok, Dir} = application:get_env(rabbit, plugins_dir), io:fwrite(\"~s~n\", [Dir]).' | grep -v '^ok$'"
+  shell: "rabbitmqctl eval '{ok, Dir} = application:get_env(rabbit, plugins_dir), io:fwrite(\"~s~n\", [Dir]).' | head -n1"
   register: register_rabbitmqctl_environment_plugins_dir
   changed_when: false
 
@@ -56,7 +56,7 @@
   when: rabbitmq_plugins_disable | length > 0
 
 - name: Get list of enabled plugins
-  shell: "rabbitmq-plugins -E list | grep -E '^\\[' | cut -f 2 -d ' '"
+  command: "rabbitmq-plugins list -E -m"
   register: register_rabbitmq_plugins_list_e
   changed_when: false
 
@@ -71,7 +71,7 @@
 - name: Assert plug-ins with `state` disabled in rabbitmq_plugins are disabled
   assert:
     that:
-      - ! item.name in register_rabbitmq_plugins_list_e.stdout_lines
+      - not item.name in register_rabbitmq_plugins_list_e.stdout_lines
   with_items: "{{ rabbitmq_plugins_disable }}"
   when:
     - rabbitmq_plugins_disable | length > 0

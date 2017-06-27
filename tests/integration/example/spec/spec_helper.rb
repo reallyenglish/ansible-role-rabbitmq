@@ -1,4 +1,5 @@
 require "infrataster/rspec"
+require "infrataster-plugin-firewall"
 
 ENV["VAGRANT_CWD"] = File.dirname(__FILE__)
 ENV["LANG"] = "C"
@@ -40,6 +41,11 @@ Infrataster::Server.define(
 Infrataster::Server.define(
   :server2,
   "192.168.21.202",
+  vagrant: true
+)
+Infrataster::Server.define(
+  :server3,
+  "192.168.21.203",
   vagrant: true
 )
 

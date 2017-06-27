@@ -64,3 +64,16 @@
     name: "{{ item }}"
     state: present
   with_items: "{{ rabbitmq_vhosts }}"
+
+- name: Create or remove users
+  rabbitmq_user:
+    name: "{{ item.name }}"
+    password: "{{ item.password }}"
+    state: "{{ item.state }}"
+    vhost: "{{ item.vhost }}"
+    tags: "administrator"
+  with_items: "{{ rabbitmq_users }}"
+
+- include: configure-cluster.yml
+  when:
+    - rabbitmq_cluster_enable

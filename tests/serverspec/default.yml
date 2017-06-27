@@ -10,8 +10,19 @@
     rabbitmq_plugins:
       - name: rabbitmq_management
         state: enabled
+      - name: rabbitmq_trust_store
+        state: disabled
     rabbitmq_flags:
       FOO: bar
+    rabbitmq_users:
+      - name: vagrant
+        password: vagrant
+        state: present
+        vhost: /
+      - name: guest
+        state: absent
+        vhost: /
+        password: guest
     rabbitmq_config: |
       [
         {rabbit,
@@ -24,3 +35,7 @@
          ]
         }
       ].
+    rabbitmq_cluster_enable: yes
+    rabbitmq_cluster_name: "foo"
+    rabbitmq_cluster_nodes:
+      - "{{ ansible_fqdn }}"
