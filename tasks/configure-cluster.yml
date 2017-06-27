@@ -48,7 +48,7 @@
     command: rabbitmqctl start_app
 
   - name: Get cluster_name again
-    shell: "rabbitmqctl eval 'io:fwrite(\"~s~n\", [rabbit_nodes:cluster_name()]).' | grep -v '^ok$'"
+    shell: "rabbitmqctl eval 'io:fwrite(\"~s~n\", [rabbit_nodes:cluster_name()]).' | head -n1"
     register: register_rabbitmq_cluster_name_again
 
   - assert:
