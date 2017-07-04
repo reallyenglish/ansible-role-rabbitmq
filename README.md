@@ -86,18 +86,35 @@ can be installed by `rabbitmq_plugins`.
 | `__rabbitmq_db_dir` | `/var/db/rabbitmq` |
 | `__rabbitmq_flags_default` | `{"rabbitmq_user"=>"{{ rabbitmq_user }}", "RABBITMQ_LOG_BASE"=>"{{ rabbitmq_log_dir }}"}` |
 
+## RedHat
+
+| Variable | Default |
+|----------|---------|
+| `__rabbitmq_service` | `rabbitmq-server.service` |
+| `__rabbitmq_db_dir` | `/var/lib/rabbitmq` |
+| `__rabbitmq_conf_dir` | `/etc/rabbitmq` |
+| `__rabbitmq_flags_default` | `{}` |
+| `__rabbitmq_extra_startup_command` | `[]` |
 
 # Dependencies
 
-None
+* reallyenglish.redhat-repo (CentOS only)
 
 # Example Playbook
 
 ```yaml
 - hosts: localhost
   roles:
+    - reallyenglish.redhat-repo
     - ansible-role-rabbitmq
   vars:
+    redhat_repo_extra_packages:
+      - epel-release
+    redhat_repo:
+      epel:
+        mirrorlist: "http://mirrors.fedoraproject.org/mirrorlist?repo=epel-{{ ansible_distribution_major_version }}&arch={{ ansible_architecture }}"
+        gpgcheck: yes
+        enabled: yes
     rabbitmq_cookie: "ABCDEFGHIJK"
     rabbitmq_env:
       foo: 1
@@ -106,8 +123,19 @@ None
     rabbitmq_plugins:
       - name: rabbitmq_management
         state: enabled
+      - name: rabbitmq_trust_store
+        state: disabled
     rabbitmq_flags:
       FOO: bar
+    rabbitmq_users:
+      - name: vagrant
+        password: vagrant
+        state: present
+        vhost: /
+      - name: guest
+        state: absent
+        vhost: /
+        password: guest
     rabbitmq_config: |
       [
         {rabbit,
@@ -120,6 +148,10 @@ None
          ]
         }
       ].
+    rabbitmq_cluster_enable: yes
+    rabbitmq_cluster_name: "foo"
+    rabbitmq_cluster_nodes:
+      - "{{ ansible_fqdn }}"
 ```
 
 # License

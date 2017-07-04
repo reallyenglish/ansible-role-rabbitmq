@@ -1,0 +1,6 @@
+---
+
+- name: Install rabbitmq
+  yum:
+    name: rabbitmq-server
+    state: present
