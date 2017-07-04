@@ -136,8 +136,6 @@ necessary information using Management plug-in APIs. The user is created with
       BAR: 2
       USE_LONGNAME: 1
     rabbitmq_plugins:
-      - name: rabbitmq_management
-        state: enabled
       - name: rabbitmq_trust_store
         state: disabled
     rabbitmq_flags:
