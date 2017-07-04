@@ -21,6 +21,7 @@ rabbitmq_plugins_local_src_dir: "" # local path to a directory where plug-ins ar
 rabbitmq_plugins: []
 
 rabbitmq_users: []
+rabbitmq_management_user: {}
 rabbitmq_vhosts: []
 rabbitmq_cluster_enable: no
 rabbitmq_cluster_name: ""

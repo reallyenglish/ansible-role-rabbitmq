@@ -130,7 +130,8 @@ end
 describe command("rabbitmqctl list_users -q") do
   its(:exit_status) { should eq 0 }
   its(:stderr) { should eq "" }
-  its(:stdout) { should match(/^vagrant\s+\[administrator\]/) }
+  its(:stdout) { should match(/^vagrant\s+\[management\]/) }
+  its(:stdout) { should match(/^root\s+\[administrator\]/) }
   its(:stdout) { should_not match(/^guest\s+/) }
 end
 
