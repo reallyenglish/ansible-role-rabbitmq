@@ -101,6 +101,16 @@ necessary information using Management plug-in APIs. The user is created with
 | `__rabbitmq_db_dir` | `/var/db/rabbitmq` |
 | `__rabbitmq_flags_default` | `{"rabbitmq_user"=>"{{ rabbitmq_user }}", "RABBITMQ_LOG_BASE"=>"{{ rabbitmq_log_dir }}"}` |
 
+## RedHat
+
+| Variable | Default |
+|----------|---------|
+| `__rabbitmq_service` | `rabbitmq-server.service` |
+| `__rabbitmq_db_dir` | `/var/lib/rabbitmq` |
+| `__rabbitmq_conf_dir` | `/etc/rabbitmq` |
+| `__rabbitmq_flags_default` | `{}` |
+| `__rabbitmq_extra_startup_command` | `[]` |
+
 # Dependencies
 
 None
@@ -110,8 +120,17 @@ None
 ```yaml
 - hosts: localhost
   roles:
+    - name: reallyenglish.redhat-repo
+      when: ansible_os_family == 'RedHat'
     - ansible-role-rabbitmq
   vars:
+    redhat_repo_extra_packages:
+      - epel-release
+    redhat_repo:
+      epel:
+        mirrorlist: "http://mirrors.fedoraproject.org/mirrorlist?repo=epel-{{ ansible_distribution_major_version }}&arch={{ ansible_architecture }}"
+        gpgcheck: yes
+        enabled: yes
     rabbitmq_cookie: "ABCDEFGHIJK"
     rabbitmq_env:
       foo: 1

@@ -19,6 +19,9 @@ default_user = "root"
 default_group = "root"
 
 case os[:family]
+when "redhat"
+  service = "rabbitmq-server.service"
+  package = "rabbitmq-server"
 when "debian", "ubuntu"
   package = "rabbitmq-server"
   service = "rabbitmq-server"
@@ -60,7 +63,7 @@ end
 describe file(cookie_file) do
   it { should exist }
   it { should be_file }
-  it { should be_mode 600 }
+  it { should be_mode os[:family] == "redhat" ? 400 : 600 }
   it { should be_owned_by user }
   it { should be_grouped_into group }
   its(:content) { should match(/^ABCDEFGHIJK$/) }

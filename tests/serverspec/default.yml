@@ -1,7 +1,16 @@
 - hosts: localhost
   roles:
+    - name: reallyenglish.redhat-repo
+      when: ansible_os_family == 'RedHat'
     - ansible-role-rabbitmq
   vars:
+    redhat_repo_extra_packages:
+      - epel-release
+    redhat_repo:
+      epel:
+        mirrorlist: "http://mirrors.fedoraproject.org/mirrorlist?repo=epel-{{ ansible_distribution_major_version }}&arch={{ ansible_architecture }}"
+        gpgcheck: yes
+        enabled: yes
     rabbitmq_cookie: "ABCDEFGHIJK"
     rabbitmq_env:
       foo: 1
