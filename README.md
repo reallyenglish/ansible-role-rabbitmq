@@ -113,7 +113,7 @@ necessary information using Management plug-in APIs. The user is created with
 
 # Dependencies
 
-* reallyenglish.redhat-repo (CentOS only)
+None
 
 # Example Playbook
 

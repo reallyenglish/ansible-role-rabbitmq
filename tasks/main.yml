@@ -61,6 +61,18 @@
   rabbitmq_plugin:
     names: "rabbitmq_management"
     state: enabled
+  register: register_rabbitmq_management_plugin
+
+- name: Restart rabbitmq when rabbitmq_management plug-in is enabled
+  service:
+    name: "{{ rabbitmq_service }}"
+    state: restarted
+  when:
+    - register_rabbitmq_management_plugin.changed
+    # XXX plug-ins are not immediately enabled on RedHat. probably not related
+    # to platform, but rabbitmq's version. without this, the test fails when
+    # getting cluster name from API.
+    - ansible_os_family == 'RedHat'
 
 - name: Create a management user
   rabbitmq_user:
