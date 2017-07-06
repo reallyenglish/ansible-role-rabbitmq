@@ -120,7 +120,8 @@ None
 ```yaml
 - hosts: localhost
   roles:
-    - reallyenglish.redhat-repo
+    - name: reallyenglish.redhat-repo
+      when: ansible_os_family == 'RedHat'
     - ansible-role-rabbitmq
   vars:
     redhat_repo_extra_packages:
