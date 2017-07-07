@@ -1,14 +1,4 @@
 - hosts: localhost
-  pre_tasks:
-    - name: Update EPEL
-      # XXX work around cache inconsistency issue by updating cache.
-      # TODO remove epel-release from the box. the epel was used to install
-      # ansible from epel repository and should not be there. see #22
-      yum:
-        name: epel-release
-        state: latest
-        update_cache: yes
-      when: ansible_os_family == 'RedHat'
   roles:
     - name: reallyenglish.redhat-repo
       when: ansible_os_family == 'RedHat'
