@@ -86,6 +86,12 @@
 
 - include: plugins.yml
 
+- name: Create vhosts
+  rabbitmq_vhost:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ rabbitmq_vhosts }}"
+
 - name: Create or remove users
   rabbitmq_user:
     name: "{{ item.name }}"
@@ -94,12 +100,6 @@
     vhost: "{{ item.vhost }}"
     tags: "administrator"
   with_items: "{{ rabbitmq_users }}"
-
-- name: Create vhosts
-  rabbitmq_vhost:
-    name: "{{ item }}"
-    state: present
-  with_items: "{{ rabbitmq_vhosts }}"
 
 - include: configure-cluster.yml
   when:
