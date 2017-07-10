@@ -21,6 +21,8 @@
         state: disabled
     rabbitmq_flags:
       FOO: bar
+    rabbitmq_vhosts:
+      - /vhost
     rabbitmq_users:
       - name: root
         password: root
@@ -29,6 +31,10 @@
       - name: guest
         state: absent
         vhost: /
+        password: ""
+      - name: foo
+        state: present
+        vhost: /vhost
         password: guest
     rabbitmq_config: |
       [
