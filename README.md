@@ -70,6 +70,48 @@ kept in `plugin_dir`. To install non-default plug-ins to `plugins_dir`, use
 `rabbitmq_plugins_local_src_dir`. Files under the directory will be copied and
 can be installed by `rabbitmq_plugins`.
 
+## `rabbitmq_users`
+
+This is a list of dict. Each element is passed to `rabbitmq_user` ansible
+module. Th following arguments of the module are supported.
+
+| Argument | Mandatory? |
+|----------|------------|
+| `name` | yes |
+| `state` | yes |
+| `password` | no |
+| `tags` | no |
+| `permissions` | no |
+| `vhost` | no |
+| `configure_priv` | no |
+| `write_priv` | no |
+| `read_priv` | no |
+
+An example:
+
+```
+rabbitmq_users:
+  - name: root
+    password: root
+    state: present
+    tags: administrator
+    vhost: /
+    configure_priv: .*
+    read_priv: .*
+    write_priv: .*
+  - name: guest
+    state: absent
+  - name: foo
+    state: present
+    password: guest
+    tags: administrator
+    permissions:
+      - vhost: /vhost
+        configure_priv: .*
+        read_priv: .*
+        write_priv: .*
+
+
 ## `rabbitmq_management_user`
 
 This dict variable defines a management user, used by the role, to retrieve
