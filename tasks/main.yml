@@ -86,20 +86,24 @@
 
 - include: plugins.yml
 
-- name: Create or remove users
-  rabbitmq_user:
-    name: "{{ item.name }}"
-    password: "{{ item.password }}"
-    state: "{{ item.state }}"
-    vhost: "{{ item.vhost }}"
-    tags: "administrator"
-  with_items: "{{ rabbitmq_users }}"
-
 - name: Create vhosts
   rabbitmq_vhost:
     name: "{{ item }}"
     state: present
   with_items: "{{ rabbitmq_vhosts }}"
+
+- name: Create or remove users
+  rabbitmq_user:
+    name: "{{ item.name }}"
+    password: "{{ item.password | default() }}"
+    state: "{{ item.state }}"
+    tags: "{{ item.tags | default() }}"
+    permissions: "{{ item.permissions | default('[]') }}"
+    vhost: "{{ item.vhost | default() }}"
+    configure_priv: "{{ item.configure_priv | default() }}"
+    write_priv: "{{ item.write_priv | default() }}"
+    read_priv: "{{ item.read_priv | default() }}"
+  with_items: "{{ rabbitmq_users }}"
 
 - include: configure-cluster.yml
   when:
