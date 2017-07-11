@@ -27,15 +27,22 @@
       - name: root
         password: root
         state: present
+        tags: administrator
         vhost: /
+        configure_priv: .*
+        read_priv: .*
+        write_priv: .*
       - name: guest
         state: absent
-        vhost: /
-        password: ""
       - name: foo
         state: present
-        vhost: /vhost
         password: guest
+        tags: administrator
+        permissions:
+          - vhost: /vhost
+            configure_priv: .*
+            read_priv: .*
+            write_priv: .*
     rabbitmq_config: |
       [
         {rabbit,

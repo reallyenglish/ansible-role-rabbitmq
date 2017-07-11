@@ -95,10 +95,14 @@
 - name: Create or remove users
   rabbitmq_user:
     name: "{{ item.name }}"
-    password: "{{ item.password }}"
+    password: "{{ item.password | default() }}"
     state: "{{ item.state }}"
-    vhost: "{{ item.vhost }}"
-    tags: "administrator"
+    tags: "{{ item.tags | default() }}"
+    permissions: "{{ item.permissions | default('[]') }}"
+    vhost: "{{ item.vhost | default() }}"
+    configure_priv: "{{ item.configure_priv | default() }}"
+    write_priv: "{{ item.write_priv | default() }}"
+    read_priv: "{{ item.read_priv | default() }}"
   with_items: "{{ rabbitmq_users }}"
 
 - include: configure-cluster.yml
