@@ -73,7 +73,7 @@ can be installed by `rabbitmq_plugins`.
 ## `rabbitmq_users`
 
 This is a list of dict. Each element is passed to `rabbitmq_user` ansible
-module. Th following arguments of the module are supported.
+module. The following arguments of the module are supported.
 
 | Argument | Mandatory? |
 |----------|------------|
