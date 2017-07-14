@@ -110,7 +110,7 @@ rabbitmq_users:
         configure_priv: .*
         read_priv: .*
         write_priv: .*
-
+```
 
 ## `rabbitmq_management_user`
 
