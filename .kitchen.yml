@@ -41,7 +41,7 @@ platforms:
   - name: centos-7.3-amd64
     driver:
       box: mitsuruy/ansible-centos-7.3-x86_64
-      box_version: 1.0.0
+      box_version: 1.2.0
       box_check_update: false
 
 suites:
